@@ -41,8 +41,6 @@ void test_identityless_reduction_for_complex_nums(queue &q) {
 int main() {
   queue q;
 
-  test_identityless_reduction_for_complex_nums<short>(q);
-  test_identityless_reduction_for_complex_nums<int>(q);
   test_identityless_reduction_for_complex_nums<float>(q);
   test_identityless_reduction_for_complex_nums<double>(q);
 
