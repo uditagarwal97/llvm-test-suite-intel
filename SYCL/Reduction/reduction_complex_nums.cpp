@@ -5,6 +5,7 @@
 
 #include <complex>
 #include <numeric>
+#include <algorithm>
 
 #include <sycl/sycl.hpp>
 
