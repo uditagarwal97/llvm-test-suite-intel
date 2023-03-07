@@ -3,9 +3,9 @@
 // RUN: %GPU_RUN_PLACEHOLDER %t.out
 // RUN: %ACC_RUN_PLACEHOLDER %t.out
 
+#include <algorithm>
 #include <complex>
 #include <numeric>
-#include <algorithm>
 
 #include <sycl/sycl.hpp>
 
