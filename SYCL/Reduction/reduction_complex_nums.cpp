@@ -18,7 +18,7 @@ using namespace sycl;
 template <typename T>
 void test_identityless_reduction_for_complex_nums(queue &q) {
   // Allocate and initialize buffer on the host with all 1's.
-  buffer<std::complex<T>> valuesBuf{1024};
+  buffer<std::complex<T>> valuesBuf{255};
   {
     host_accessor a{valuesBuf};
     T n = 0;
@@ -34,18 +34,21 @@ void test_identityless_reduction_for_complex_nums(queue &q) {
     accessor inputVals{valuesBuf, cgh, sycl::read_only};
     auto sumReduction = reduction(sumBuf, cgh, plus<std::complex<T>>());
 
-    cgh.parallel_for(range<1>{1024}, sumReduction,
-                     [=](id<1> idx, auto &sum) { sum += inputVals[idx]; });
+    cgh.parallel_for(nd_range<1>{255, 255}, sumReduction,
+                     [=](nd_item<1> idx, auto &sum) {
+                       sum += inputVals[idx.get_global_id(0)];
+                     });
   });
 
-  assert(sumBuf.get_host_access()[0] == std::complex<T>(523776, 525824));
+  assert(sumBuf.get_host_access()[0] == std::complex<T>(32385, 32895));
 }
 
 int main() {
   queue q;
 
   test_identityless_reduction_for_complex_nums<float>(q);
-  test_identityless_reduction_for_complex_nums<double>(q);
+  if (q.get_device().has(aspect::fp64))
+    test_identityless_reduction_for_complex_nums<double>(q);
 
   return 0;
 }
