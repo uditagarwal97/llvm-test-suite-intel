@@ -28,6 +28,17 @@ config.suffixes = ['.c', '.cpp']
 
 config.excludes = ['Inputs']
 
+# test if 'true' is available on this platform.
+# 'true' is a UNIX utility that's not avialable on Windows cmd prompt.
+# if 'true' is not available, we will replace it with 'echo'.
+isTrueAvailable = False
+trueProc = subprocess.run(["true"], shell=True, stdout=subprocess.DEVNULL, stderr=subprocess.DEVNULL)
+
+if trueProc.returncode == 0:
+  isTrueAvailable = True
+else:
+  isTrueAvailable = False
+
 # test_source_root: The root path where tests are located.
 config.test_source_root = os.path.dirname(__file__)
 
@@ -303,6 +314,10 @@ cpu_run_on_linux_substitute = "true "
 cpu_check_substitute = ""
 cpu_check_on_linux_substitute = ""
 
+if !isTrueAvailable:
+  cpu_run_substitute = "echo"
+  cpu_run_on_linux_substitute = "echo"
+
 if 'cpu' in config.target_devices.split(','):
     found_at_least_one_device = True
     lit_config.note("Test CPU device")
@@ -328,6 +343,10 @@ gpu_run_on_linux_substitute = "true "
 gpu_check_substitute = ""
 gpu_l0_check_substitute = ""
 gpu_check_on_linux_substitute = ""
+
+if !isTrueAvailable:
+  gpu_run_substitute = "echo"
+  gpu_run_on_linux_substitute = "echo"
 
 if 'gpu' in config.target_devices.split(','):
     found_at_least_one_device = True
@@ -369,6 +388,10 @@ config.substitutions.append( ('%GPU_CHECK_ON_LINUX_PLACEHOLDER',  gpu_check_on_l
 
 acc_run_substitute = "true"
 acc_check_substitute = ""
+
+if !isTrueAvailable:
+  acc_run_substitute = "echo"
+
 if 'acc' in config.target_devices.split(','):
     found_at_least_one_device = True
     lit_config.note("Tests accelerator device")
