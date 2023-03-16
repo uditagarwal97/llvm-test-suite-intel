@@ -314,7 +314,7 @@ cpu_run_on_linux_substitute = "true "
 cpu_check_substitute = ""
 cpu_check_on_linux_substitute = ""
 
-if !isTrueAvailable:
+if not isTrueAvailable:
   cpu_run_substitute = "echo"
   cpu_run_on_linux_substitute = "echo"
 
@@ -344,7 +344,7 @@ gpu_check_substitute = ""
 gpu_l0_check_substitute = ""
 gpu_check_on_linux_substitute = ""
 
-if !isTrueAvailable:
+if not isTrueAvailable:
   gpu_run_substitute = "echo"
   gpu_run_on_linux_substitute = "echo"
 
@@ -389,7 +389,7 @@ config.substitutions.append( ('%GPU_CHECK_ON_LINUX_PLACEHOLDER',  gpu_check_on_l
 acc_run_substitute = "true"
 acc_check_substitute = ""
 
-if !isTrueAvailable:
+if not isTrueAvailable:
   acc_run_substitute = "echo"
 
 if 'acc' in config.target_devices.split(','):
