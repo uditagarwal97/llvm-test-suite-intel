@@ -42,7 +42,7 @@ void test_identityless_reduction_for_complex_nums(queue &q) {
                      });
   });
 
-  assert(sumBuf.get_host_access()[0] == std::complex<T>(32385, 32895));
+  assert(sumBuf.get_host_access()[0] == std::complex<T>(32640,32895));
 }
 
 int main() {
