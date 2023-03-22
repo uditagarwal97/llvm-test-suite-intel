@@ -24,8 +24,10 @@ void test_identityless_reduction_for_complex_nums(queue &q) {
   {
     host_accessor a{valuesBuf};
     T n = 0;
-    std::generate(a.begin(), a.end(),
-                  [&n] { n++; return std::complex<T>(n, n + 1); });
+    std::generate(a.begin(), a.end(), [&n] {
+      n++;
+      return std::complex<T>(n, n + 1);
+    });
   }
 
   // Buffer to hold the reduction results.
