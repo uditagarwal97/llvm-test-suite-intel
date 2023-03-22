@@ -11,6 +11,8 @@
 
 using namespace sycl;
 
+#define BUFFER_SIZE 255
+
 // Currently, Identityless reduction for complex numbers is
 // only valid for plus operator.
 // TODO: Extend this test case once we support known_identity for std::complex
@@ -18,12 +20,12 @@ using namespace sycl;
 template <typename T>
 void test_identityless_reduction_for_complex_nums(queue &q) {
   // Allocate and initialize buffer on the host with all 1's.
-  buffer<std::complex<T>> valuesBuf{255};
+  buffer<std::complex<T>> valuesBuf{BUFFER_SIZE};
   {
     host_accessor a{valuesBuf};
     T n = 0;
     std::generate(a.begin(), a.end(),
-                  [&n] { return std::complex<T>(n, ++n + 1); });
+                  [&n] { n++; return std::complex<T>(n, n + 1); });
   }
 
   // Buffer to hold the reduction results.
@@ -34,7 +36,7 @@ void test_identityless_reduction_for_complex_nums(queue &q) {
     accessor inputVals{valuesBuf, cgh, sycl::read_only};
     auto sumReduction = reduction(sumBuf, cgh, plus<std::complex<T>>());
 
-    cgh.parallel_for(nd_range<1>{255, 255}, sumReduction,
+    cgh.parallel_for(nd_range<1>{BUFFER_SIZE, BUFFER_SIZE}, sumReduction,
                      [=](nd_item<1> idx, auto &sum) {
                        sum += inputVals[idx.get_global_id(0)];
                      });
